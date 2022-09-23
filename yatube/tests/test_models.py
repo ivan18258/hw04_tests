@@ -22,7 +22,7 @@ class PostModelTest(TestCase):
         )
 
     def test_models_have_correct_object_names(self):
-        """Проверяем, что у моделей корректно работает __str__."""
+        """  Проверяем, что у моделей корректно работает __str__."""
         post = PostModelTest.post # Обратите внимание на синтаксис
         expected_object_name = post.text[:15]
         self.assertEqual(expected_object_name, str(post))
@@ -46,3 +46,4 @@ class PostModelTest(TestCase):
         # Получаем из свойста класса Task значение help_text для title
         help_text = post._meta.get_field('text').help_text
         self.assertEqual(help_text, 'Введите текст поста')
+        

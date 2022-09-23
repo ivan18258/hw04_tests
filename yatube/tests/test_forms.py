@@ -10,6 +10,7 @@ from posts.models import Group, Post, User
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 NEW_POST = reverse('posts:post_create')
 
+
 @override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
 class TasCreateFormTests(TestCase):
     @classmethod
@@ -41,14 +42,17 @@ class TasCreateFormTests(TestCase):
             'posts:profile',
             args=[cls.user.username]
         )
+
     @classmethod
     def tearDownClass(cls):
         super().tearDownClass()
         shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
+
     def setUp(self):
         self.guest_client = Client()
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)
+
     def test_post_create(self):
         posts = Post.objects.all()
         posts.delete()
@@ -67,6 +71,7 @@ class TasCreateFormTests(TestCase):
         self.assertEqual(data['group'], post.group.id)
         self.assertEqual(post.author, self.user)
         self.assertRedirects(response, self.PROFILE_URL)
+
     def test_new_post_show_correct_context(self):
         urls = [
             NEW_POST,
@@ -81,6 +86,7 @@ class TasCreateFormTests(TestCase):
                 with self.subTest(value=value):
                     form_field = response.context.get('form').fields.get(value)
                     self.assertIsInstance(form_field, expected)
+
     def test_edit_post(self):
         form_data = {
             'text': 'hi!',
@@ -96,3 +102,4 @@ class TasCreateFormTests(TestCase):
         self.assertEqual(form_data['group'], f'{post.group.id}')
         self.assertEqual(post.author, self.post.author)
         self.assertRedirects(response, self.POST_URL)
+        

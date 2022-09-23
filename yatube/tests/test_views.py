@@ -9,6 +9,7 @@ from posts.models import Group
 
 User = get_user_model()
 
+
 class PostViewsTests(TestCase):
     @classmethod
     def setUpClass(cls):
@@ -20,7 +21,7 @@ class PostViewsTests(TestCase):
             description='Тестовое описание',
         )
         cls.post = Post.objects.create(
-            author=cls.user, 
+            author=cls.user,
             text='Тестовый текст',
             group=cls.group,
         )
@@ -64,19 +65,19 @@ class PostViewsTests(TestCase):
         response = self.guest_client.get(reverse('posts:index'))
         self.assertIn('page_obj', response.context.keys())
         self.assertNotEqual(len(response.context['page_obj']), 0)
-    
+
     def test_group_list_page_correct_context(self):
         '''Проверяем, что в список постов передается правильный контекст '''
         response = self.guest_client.get(reverse('posts:group_list',
                                          kwargs={'slug': 'test-slug'}))
         self.assertEqual(response.context['group'], self.group)
-    
+
     def test_profile_page_correct_context(self):
         '''Проверяем, что в profile передается правильный контекст'''
-        response = self.authorized_client.get(reverse('posts:profile', 
+        response = self.authorized_client.get(reverse('posts:profile',
                                               kwargs={'username': self.user}))
         self.assertEqual(response.context['author'], self.post.author)
-    
+
     def test_post_detail_page_correct_context(self):
         '''Проверяем, что в post_detail передается правильный контекст'''
         response = self.authorized_client.get(
@@ -97,7 +98,7 @@ class PostViewsTests(TestCase):
             with self.subTest(value=value):
                 form_field = response.context['form'].fields[value]
                 self.assertIsInstance(form_field, expected)
-    
+
     def test_create_post_page_correct_context(self):
         '''Проверяем, что в create_post передается правильный контекст'''
         response = self.authorized_client.get(reverse('posts:post_create'))
