@@ -48,8 +48,7 @@ def profile(request, username):
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     context = {
-              'post': post,
-              }
+              'post': post, }
     return render(request, 'posts/post_detail.html', context)
 
 

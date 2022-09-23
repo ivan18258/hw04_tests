@@ -102,4 +102,3 @@ class TasCreateFormTests(TestCase):
         self.assertEqual(form_data['group'], f'{post.group.id}')
         self.assertEqual(post.author, self.post.author)
         self.assertRedirects(response, self.POST_URL)
-        
