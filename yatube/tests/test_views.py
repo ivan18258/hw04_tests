@@ -48,7 +48,7 @@ class PostViewsTests(TestCase):
                 'posts:post_detail', kwargs={'post_id': self.post_id}
             ): 'posts/post_detail.html',
             reverse('posts:post_edit', kwargs={'post_id': self.post_id}
-                   ): 'posts/create_post.html',
+        ): 'posts/create_post.html',
             reverse('posts:post_create'): 'posts/create_post.html',
         }
         for reverse_name, template in templates_page_names.items():
