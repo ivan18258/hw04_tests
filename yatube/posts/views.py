@@ -3,12 +3,14 @@ from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-
+from django.views.decorators.cache import cache_page
 
 from .models import Post
 from .models import Group
 from .models import User
+from .models import Comment
 from .forms import PostForm
+from .forms import CommentForm
 
 
 def paginator(request, post_list):
@@ -47,14 +49,18 @@ def profile(request, username):
 
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
+    form = CommentForm()
+    comment=Comment.objects.all().filter(post=post)
     context = {
-        'post': post, }
+        'post': post,
+        'comment':comment,
+        'form':form,}
     return render(request, 'posts/post_detail.html', context)
 
 
 @login_required
 def post_create(request):
-    form = PostForm(request.POST or None)
+    form = PostForm(request.POST or None,)
     if form.is_valid():
         create_post = form.save(commit=False)
         create_post.author = request.user
@@ -72,7 +78,10 @@ def post_edit(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     if request.user != post.author:
         return redirect('posts:post_detail', post_id)
-    form = PostForm(request.POST or None, instance=post)
+    form = PostForm(
+        request.POST or None,
+        files=request.FILES or None,
+        instance=post)
     if form.is_valid():
         form.save()
         return redirect('posts:post_detail', post_id)
@@ -83,3 +92,15 @@ def post_edit(request, post_id):
         'post': post,
     }
     return render(request, template, context)
+
+
+@login_required
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id) 
+    form = CommentForm(request.POST or None)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.author = request.user
+        comment.post = post
+        comment.save()
+    return redirect('posts:post_detail', post_id=post_id)
