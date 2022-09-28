@@ -110,21 +110,14 @@ class PostViewsTests(TestCase):
 
     def test_paginator(self):
         '''Проверка работы Пагинатора'''
-        objs=[
+        objs = [
             Post(
                 text=f'Тестовый текст {post}',
                 author=self.user,
-                group=self.group,
-                )
+                group=self.group,)
             for post in range(11)
-            ]
-        post = Post.objects.bulk_create(objs)    
-       # for post in range(11):
-        #    post = Post.objects.create(
-        #        text=f'Тестовый текст {post}',
-          #      author=self.user,
-          #      group=self.group,
-          #  )
+        ]
+        Post.objects.bulk_create(objs)
         posturls_posts_page = [('', 10), ('?page=2', 2)]
         templates = [
             reverse('posts:index'),
