@@ -1,13 +1,10 @@
-from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
 from django import forms
 
 from posts.models import Post
 from posts.models import Group
-
-
-User = get_user_model()
+from posts.models import User
 
 
 class PostViewsTests(TestCase):
@@ -113,12 +110,21 @@ class PostViewsTests(TestCase):
 
     def test_paginator(self):
         '''Проверка работы Пагинатора'''
-        for post in range(11):
-            post = Post.objects.create(
+        objs=[
+            Post(
                 text=f'Тестовый текст {post}',
                 author=self.user,
                 group=self.group,
-            )
+                )
+            for post in range(11)
+            ]
+        post = Post.objects.bulk_create(objs)    
+       # for post in range(11):
+        #    post = Post.objects.create(
+        #        text=f'Тестовый текст {post}',
+          #      author=self.user,
+          #      group=self.group,
+          #  )
         posturls_posts_page = [('', 10), ('?page=2', 2)]
         templates = [
             reverse('posts:index'),
