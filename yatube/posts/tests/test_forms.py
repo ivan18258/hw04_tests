@@ -66,8 +66,8 @@ class TasCreateFormTests(TestCase):
             follow=True
         )
         post = response.context['page_obj'][0]
-        self.assertEqual(len(response.context['page_obj']), 
-            Post.objects.count())
+        self.assertEqual(len(response.context['page_obj']),
+                            Post.objects.count())
         self.assertEqual(post.text, data['text'])
         self.assertEqual(data['group'], post.group.id)
         self.assertEqual(post.author, self.user)
